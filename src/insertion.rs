@@ -31,3 +31,7 @@ fn test_sort_small_vector() {
         idx += 1;
     }
 }
+
+#[test]
+fn test_randomly_generated_vector() {
+}
