@@ -1,11 +1,9 @@
-#![feature(rand)]
-
-use rand::Rng;
-
 pub mod rand_range {
+    use rand::{thread_rng, Rng};
+
     pub fn generate_random_range(upper: usize) -> Vec<i32> {
         let mut vec: Vec<i32> = (0..(upper as i32)).collect();
-        let mut rng = rand::thread_rng();
+        let mut rng = thread_rng();
         rng.shuffle(&mut *vec);
 
         vec
