@@ -4,7 +4,7 @@
 
 - [x] insertion sort
 - [x] quick sort
-- [ ] merge sort
+- [x] merge sort
 - [ ] heap sort
 - [ ] shell sort
 - [ ] bubble sort
