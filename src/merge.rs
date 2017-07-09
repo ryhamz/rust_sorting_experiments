@@ -1,72 +1,40 @@
 pub mod merge {
     pub fn merge_sort(v: &mut Vec<i32>) {
-        let right = (v.len() - 1) as i32;
-        msort(v, 0, right);
+        let right = v.len();
+        let mut v2: Vec<i32> = vec![0; right];
+        merge_split(v, 0, right, &mut v2);
     }
 
-    fn msort(v: &mut Vec<i32>, left: i32, right: i32) {
-        if left < right {
-            //let mid = left + (right - left) / 2;
-            let mid = (right + left) / 2;
-
-            // sort first and second halves
-            msort(v, left, mid);
-            msort(v, mid + 1, right);
-
-            merge(v, left, mid, right);
+    fn merge_split(v: &mut Vec<i32>, left: usize, right: usize, v2: &mut Vec<i32>) {
+        if right - left <= 1 {
+            return;
+        } else {
+            let mid = (left + right) / 2;
+            merge_split(v, left, mid, v2);
+            merge_split(v, mid, right, v2);
+            merge(v, left, mid, right, v2);
+            merge_copy(v, left, right, v2);
         }
     }
 
-    fn merge(v: &mut Vec<i32>, left: i32, mid: i32, right: i32) {
-        let left_u = left as usize;
-        let mid_u = mid as usize;
-        let right_u = right as usize;
-
-        let n1 = mid - left + 1;
-        let n2 = right - mid;
-        let n1_u = n1 as usize;
-        let n2_u = n2 as usize;
-
-        let mut left_arr: Vec<i32> = Vec::new();
-        let mut right_arr: Vec<i32> = Vec::new();
-
-        // Copy data to temp arrays
-        for i in 0..(n1 as usize) {
-            left_arr.push(v[left_u + i]);
+    fn merge_copy(v: &mut Vec<i32>, left: usize, right: usize, v2: &mut Vec<i32>) {
+        for i in left..right {
+            v[i] = v2[i];
         }
+    }
 
-        for j in 0..(n2 as usize) {
-            right_arr.push(v[mid_u + 1 + j]);
-        }
+    fn merge(v: &mut Vec<i32>, left: usize, mid: usize, right: usize, v2: &mut Vec<i32>) {
+        let mut ptr1 = left;
+        let mut ptr2 = mid;
 
-        // Merge temp arrays back into v[1..right]
-        let mut i: usize = 0; // initial index of first subarray
-        let mut j: usize = 0; // initial index of second subarray
-        let mut k: usize = 1; // initial index of merged subarray
-
-        while i < n1_u && j < n2_u {
-            if left_arr[i] <= right_arr[i] {
-                v[k] = left_arr[i];
-                i += 1;
+        for i in left..right {
+            if ptr1 < mid && (ptr2 >= right || v[ptr1] <= v[ptr2]) {
+                v2[i] = v[ptr1];
+                ptr1 += 1;
             } else {
-                v[k] = right_arr[j];
-                j += 1;
+                v2[i] = v[ptr2];
+                ptr2 += 1;
             }
-            k += 1;
-        }
-
-        // Copy any remaining elements of left_arr
-        while i < n1_u {
-            v[k] = left_arr[i];
-            i += 1;
-            k += 1;
-        }
-
-        // Copy any remaining elements of right_arr
-        while j < n2_u {
-            v[k] = right_arr[j];
-            j += 1;
-            k += 1;
         }
     }
 }
@@ -81,6 +49,22 @@ fn test_sort_small_vector() {
 
     for i in 0..v.len() {
         assert_eq!(idx, v[i]);
+        idx += 1;
+    }
+}
+
+#[test]
+fn test_randomly_generated_vector() {
+    use rand_range::*;
+
+    let mut rand_vec = rand_range::generate_random_range(1000);
+
+    merge::merge_sort(&mut rand_vec);
+
+    let mut idx: i32 = 0;
+
+    while idx < 1000 {
+        assert_eq!(idx, rand_vec[idx as usize]);
         idx += 1;
     }
 }
