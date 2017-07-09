@@ -1,7 +1,3 @@
-//extern crate rand_range;
-
-use rand_range::*;
-
 pub mod insertion {
     pub fn insertion_sort(v: &mut Vec<i32>) {
         let mut j: i32;
@@ -38,6 +34,8 @@ fn test_sort_small_vector() {
 
 #[test]
 fn test_randomly_generated_vector() {
+    use rand_range::*;
+
     let mut rand_vec = rand_range::generate_random_range(1000);
 
     insertion::insertion_sort(&mut rand_vec);
