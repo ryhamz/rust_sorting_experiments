@@ -47,3 +47,19 @@ fn test_sort_small_vector() {
         idx += 1;
     }
 }
+
+#[test]
+fn test_randomly_generated_vector() {
+    use rand_range::*;
+
+    let mut rand_vec = rand_range::generate_random_range(1000);
+
+    quick::quick_sort(&mut rand_vec);
+
+    let mut idx: i32 = 0;
+
+    while idx < 1000 {
+        assert_eq!(idx, rand_vec[idx as usize]);
+        idx += 1;
+    }
+}
